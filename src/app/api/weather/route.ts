@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-static';
+export const revalidate = 3600;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const lat = searchParams.get('lat');
