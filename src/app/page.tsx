@@ -1,103 +1,87 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [searchQuery, setSearchQuery] = useState('');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  return (
+    <div className="min-h-screen weather-gradient">
+      <div className="container mx-auto px-4 py-8">
+        <header className="text-center mb-12 animate-fade-in-up">
+          <h1 className="text-6xl font-bold text-white mb-6 drop-shadow-2xl tracking-tight">
+            WeatherApp
+          </h1>
+          <p className="text-2xl text-blue-100 font-light">
+            Découvrez la météo en temps réel
+          </p>
+        </header>
+
+        <main className="max-w-6xl mx-auto">
+          <div className="glass-effect rounded-3xl p-8 shadow-2xl animate-fade-in-up">
+            <div className="text-center mb-10">
+              <div className="relative max-w-lg mx-auto">
+                <input
+                  type="text"
+                  placeholder="Rechercher une ville..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="search-input w-full px-8 py-5 rounded-2xl bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-white/30 focus:border-transparent backdrop-blur-sm text-lg"
+                />
+                <button className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-xl p-4 transition-all duration-300 hover:scale-110">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+              <div className="weather-card glass-effect rounded-2xl p-8 text-center border border-white/20 hover:border-white/40">
+                <div className="text-6xl mb-4 animate-pulse">🌤️</div>
+                <h3 className="text-white font-bold text-xl mb-3">Ensoleillé</h3>
+                <p className="text-blue-100 text-lg font-medium">25°C</p>
+                <p className="text-blue-200 text-sm mt-2">Humidité: 65%</p>
+              </div>
+              
+              <div className="weather-card glass-effect rounded-2xl p-8 text-center border border-white/20 hover:border-white/40">
+                <div className="text-6xl mb-4 animate-pulse">⛅</div>
+                <h3 className="text-white font-bold text-xl mb-3">Nuageux</h3>
+                <p className="text-blue-100 text-lg font-medium">22°C</p>
+                <p className="text-blue-200 text-sm mt-2">Humidité: 78%</p>
+              </div>
+              
+              <div className="weather-card glass-effect rounded-2xl p-8 text-center border border-white/20 hover:border-white/40">
+                <div className="text-6xl mb-4 animate-pulse">🌧️</div>
+                <h3 className="text-white font-bold text-xl mb-3">Pluvieux</h3>
+                <p className="text-blue-100 text-lg font-medium">18°C</p>
+                <p className="text-blue-200 text-sm mt-2">Humidité: 85%</p>
+              </div>
+            </div>
+
+            <div className="glass-effect rounded-2xl p-8 border border-white/20">
+              <h2 className="text-white text-2xl font-bold mb-6 text-center">Prévisions 7 jours</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6">
+                {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, index) => (
+                  <div key={index} className="text-center p-4 rounded-xl hover:bg-white/10 transition-all duration-300">
+                    <p className="text-white/90 text-sm mb-3 font-medium">{day}</p>
+                    <div className="text-3xl mb-3">☀️</div>
+                    <p className="text-white text-lg font-semibold">25°</p>
+                    <p className="text-blue-200 text-sm">18°</p>
+                    <p className="text-blue-300 text-xs mt-1">Pluie: 20%</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer className="text-center mt-16 animate-fade-in-up">
+          <p className="text-white/80 text-lg">
+            Application météo moderne • Développée avec Next.js & Tailwind CSS
+          </p>
+        </footer>
+      </div>
     </div>
   );
 }
