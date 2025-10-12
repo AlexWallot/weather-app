@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="64" fill="#667eea"/>
+  <circle cx="256" cy="256" r="160" fill="#ffffff" opacity="0.9"/>
+  <path d="M256 106C256 106 213 160 213 213C213 266 240 288 256 288C272 288 299 266 299 213C299 160 256 106 256 106Z" fill="#667eea"/>
+  <path d="M202 320C202 320 160 373 160 426C160 480 187 501 202 501C218 501 245 480 245 426C245 373 202 320 202 320Z" fill="#667eea"/>
+  <path d="M310 320C310 320 352 373 352 426C352 480 325 501 310 501C294 501 267 480 267 426C267 373 310 320 310 320Z" fill="#667eea"/>
+  <text x="256" y="373" text-anchor="middle" fill="#667eea" font-family="Arial, sans-serif" font-size="64" font-weight="bold">°C</text>
+</svg>
