@@ -5,7 +5,9 @@
   },
   "search": {
     "placeholder": "Rechercher une ville...",
-    "button": "Rechercher"
+    "button": "Rechercher",
+    "search": "Rechercher",
+    "searching": "Recherche en cours..."
   },
   "weather": {
     "current": "Actuel",
@@ -18,7 +20,8 @@
     "forecast": {
       "7days": "Prévisions 7 jours", 
       "14days": "Prévisions 14 jours",
-      "30days": "Prévisions 30 jours"
+      "30days": "Prévisions 30 jours",
+      "day": "Jour"
     }
   },
   "tabs": {

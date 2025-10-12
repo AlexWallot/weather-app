@@ -1,6 +1,7 @@
-const CACHE_NAME = 'weather-app-v1';
-const STATIC_CACHE = 'weather-static-v1';
-const DYNAMIC_CACHE = 'weather-dynamic-v1';
+const CACHE_NAME = 'weather-app-v2';
+const STATIC_CACHE = 'weather-static-v2';
+const DYNAMIC_CACHE = 'weather-dynamic-v2';
+const API_CACHE = 'weather-api-v2';
 
 const urlsToCache = [
   '/',
@@ -74,23 +75,30 @@ self.addEventListener('fetch', (event) => {
     );
   }
   
-  // Stratégie Network First pour les données météo
+  // Stratégie Network First pour les données météo avec cache intelligent
   if (url.pathname.includes('/api/weather')) {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.status === 200) {
-            const responseToCache = response.clone();
-            caches.open(DYNAMIC_CACHE)
-              .then((cache) => {
-                cache.put(request, responseToCache);
-              });
+      caches.open(API_CACHE).then((cache) => {
+        return cache.match(request).then((cachedResponse) => {
+          if (cachedResponse) {
+            // Retourner le cache immédiatement et mettre à jour en arrière-plan
+            fetch(request).then((networkResponse) => {
+              if (networkResponse.status === 200) {
+                cache.put(request, networkResponse.clone());
+              }
+            }).catch(() => {});
+            return cachedResponse;
           }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request);
-        })
+          
+          // Pas de cache, faire la requête réseau
+          return fetch(request).then((response) => {
+            if (response.status === 200) {
+              cache.put(request, response.clone());
+            }
+            return response;
+          });
+        });
+      })
     );
   }
   

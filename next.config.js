@@ -3,10 +3,16 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@next/font'],
     optimizeCss: true,
+    optimizeServerReact: true,
+    serverComponentsExternalPackages: [],
   },
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   async headers() {
     return [
       {
@@ -20,6 +26,10 @@ const nextConfig = {
             key: 'Service-Worker-Allowed',
             value: '/',
           },
+          {
+            key: 'Content-Type',
+            value: 'application/javascript',
+          },
         ],
       },
       {
@@ -28,6 +38,10 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Content-Type',
+            value: 'application/manifest+json',
           },
         ],
       },
@@ -38,6 +52,10 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
           },
+          {
+            key: 'Content-Type',
+            value: 'image/png',
+          },
         ],
       },
       {
@@ -46,6 +64,27 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
           },
         ],
       },

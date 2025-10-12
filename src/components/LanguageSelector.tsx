@@ -10,6 +10,8 @@ export const LanguageSelector = ({ language, onChange }: LanguageSelectorProps) 
     <div className="flex items-center gap-2">
       <button
         onClick={() => onChange('fr')}
+        aria-label="Changer la langue en français"
+        aria-pressed={language === 'fr'}
         className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
           language === 'fr'
             ? 'bg-white/30 text-white shadow-lg'
@@ -20,6 +22,8 @@ export const LanguageSelector = ({ language, onChange }: LanguageSelectorProps) 
       </button>
       <button
         onClick={() => onChange('en')}
+        aria-label="Change language to English"
+        aria-pressed={language === 'en'}
         className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
           language === 'en'
             ? 'bg-white/30 text-white shadow-lg'

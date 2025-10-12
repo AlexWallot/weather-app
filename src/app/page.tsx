@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense, memo, useCallback, useMemo } from 'react';
 import { weatherCodes } from '../constants/weatherCodes';
 import { WeatherData } from './interfaces/weatherData';
 import { useTranslation } from '../hooks/useTranslation';
@@ -10,6 +10,10 @@ import { useServiceWorker } from '../hooks/useServiceWorker';
 
 // Lazy loading des composants lourds
 const WeatherDetails = lazy(() => import('../components/WeatherDetails').then(module => ({ default: module.WeatherDetails })));
+
+// Composants mémorisés pour éviter les re-renders
+const MemoizedLanguageSelector = memo(LanguageSelector);
+const MemoizedPWAInstallPrompt = memo(PWAInstallPrompt);
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,7 +115,7 @@ export default function Home() {
     }
   };
 
-  const getCurrentWeather = () => {
+  const getCurrentWeather = useCallback(() => {
     if (!weatherData) return null;
     const code = weatherData.current.weather_code;
     const weatherCode = weatherCodes[code] || { emoji: '❓', description: 'Inconnu' };
@@ -119,7 +123,7 @@ export default function Home() {
       emoji: weatherCode.emoji,
       description: t(`weatherConditions.${code}`) || t('weatherConditions.unknown')
     };
-  };
+  }, [weatherData, t]);
 
   const getForecastDays = (days: number) => {
     if (!weatherData) return [];
@@ -140,7 +144,7 @@ export default function Home() {
     return dayNames[(today.getDay() + index) % 7];
   };
 
-  const renderForecastSection = (days: number, title: string) => {
+  const renderForecastSection = useCallback((days: number, title: string) => {
     if (!weatherData) return null;
 
     return (
@@ -161,6 +165,15 @@ export default function Home() {
                 key={index} 
                 className="text-center p-4 rounded-xl hover:bg-white/10 transition-all duration-300 cursor-pointer hover:scale-105"
                 onClick={() => setSelectedDay(index)}
+                role="button"
+                tabIndex={0}
+                aria-label={`${t('weather.forecast.day')} ${getDayName(index)} - ${Math.round(maxTemp)}°C / ${Math.round(minTemp)}°C - ${weather.description}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedDay(index);
+                  }
+                }}
               >
                 <p className="text-white/90 text-sm mb-3 font-medium">{getDayName(index)}</p>
                 <div className="text-3xl mb-3">{weather.emoji}</div>
@@ -175,7 +188,7 @@ export default function Home() {
         </div>
       </div>
     );
-  };
+  }, [weatherData, t]);
 
   return (
     <div className="min-h-screen weather-gradient">
@@ -183,7 +196,7 @@ export default function Home() {
         <header className="text-center mb-12 animate-fade-in-up">
           <div className="flex justify-between items-center mb-8">
             <div></div>
-            <LanguageSelector language={language} onChange={changeLanguage} />
+            <MemoizedLanguageSelector language={language} onChange={changeLanguage} />
           </div>
           <h1 className="text-6xl font-bold text-white mb-6 drop-shadow-2xl tracking-tight">
             {t('app.title')}
@@ -208,6 +221,7 @@ export default function Home() {
                 <button 
                   type="submit"
                   disabled={loading}
+                  aria-label={loading ? t('search.searching') : t('search.search')}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-xl p-4 transition-all duration-300 hover:scale-110 disabled:opacity-50"
                 >
                   {loading ? (
@@ -257,6 +271,8 @@ export default function Home() {
                   <div className="bg-white/10 rounded-2xl p-2 flex gap-2">
                     <button
                       onClick={() => setActiveTab('7days')}
+                      aria-label={t('tabs.7days')}
+                      aria-pressed={activeTab === '7days'}
                       className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                         activeTab === '7days'
                           ? 'bg-white/30 text-white shadow-lg'
@@ -267,6 +283,8 @@ export default function Home() {
                     </button>
                     <button
                       onClick={() => setActiveTab('14days')}
+                      aria-label={t('tabs.14days')}
+                      aria-pressed={activeTab === '14days'}
                       className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                         activeTab === '14days'
                           ? 'bg-white/30 text-white shadow-lg'
@@ -317,7 +335,7 @@ export default function Home() {
         </Suspense>
       )}
       
-      <PWAInstallPrompt />
+      <MemoizedPWAInstallPrompt />
     </div>
   );
 }

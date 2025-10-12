@@ -69,6 +69,7 @@ export const WeatherDetails = ({ weatherData, dayIndex, onClose, t }: WeatherDet
           </h2>
           <button
             onClick={onClose}
+            aria-label="Fermer les détails météo"
             className="text-white/70 hover:text-white text-2xl"
           >
             ✕
@@ -79,6 +80,8 @@ export const WeatherDetails = ({ weatherData, dayIndex, onClose, t }: WeatherDet
           <div className="bg-white/10 rounded-2xl p-2 flex gap-2">
             <button
               onClick={() => setActiveTab('overview')}
+              aria-label={t('details.overview')}
+              aria-pressed={activeTab === 'overview'}
               className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                 activeTab === 'overview'
                   ? 'bg-white/30 text-white shadow-lg'
@@ -89,6 +92,8 @@ export const WeatherDetails = ({ weatherData, dayIndex, onClose, t }: WeatherDet
             </button>
             <button
               onClick={() => setActiveTab('hourly')}
+              aria-label={t('details.hourly')}
+              aria-pressed={activeTab === 'hourly'}
               className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                 activeTab === 'hourly'
                   ? 'bg-white/30 text-white shadow-lg'
@@ -99,6 +104,8 @@ export const WeatherDetails = ({ weatherData, dayIndex, onClose, t }: WeatherDet
             </button>
             <button
               onClick={() => setActiveTab('details')}
+              aria-label={t('details.details')}
+              aria-pressed={activeTab === 'details'}
               className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                 activeTab === 'details'
                   ? 'bg-white/30 text-white shadow-lg'
