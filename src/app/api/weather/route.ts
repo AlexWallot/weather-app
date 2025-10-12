@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import axios from 'axios';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -46,24 +47,32 @@ export async function GET(request: NextRequest) {
 
     url += '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,apparent_temperature,precipitation,cloud_cover,uv_index&hourly=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation_probability,precipitation,cloud_cover,uv_index&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,uv_index_max&timezone=auto&forecast_days=14';
 
-    console.log('API Weather - Final URL:', url);
-    const response = await fetch(url);
-    const data = await response.json();
+        console.log('API Weather - Final URL:', url);
+        const response = await axios.get(url, {
+          timeout: 10000,
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'WeatherApp/1.0'
+          }
+        });
 
-    console.log('API Weather - Response status:', response.status);
-    console.log('API Weather - Response data:', data);
+        console.log('API Weather - Response status:', response.status);
+        console.log('API Weather - Response data:', response.data);
 
-    if (!response.ok) {
-      console.error('API Weather - Error response:', data);
-      return NextResponse.json({ 
-        error: data.error || `Erreur API météo (${response.status})`,
-        details: data 
-      }, { status: response.status });
-    }
-
-    return NextResponse.json(data);
+        return NextResponse.json(response.data);
   } catch (error) {
     console.error('Erreur API météo:', error);
+    
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status || 500;
+      const message = error.response?.data?.error || error.message || 'Erreur API météo';
+      
+      return NextResponse.json({ 
+        error: message,
+        details: error.response?.data || error.message
+      }, { status });
+    }
+    
     return NextResponse.json({ 
       error: 'Erreur serveur',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

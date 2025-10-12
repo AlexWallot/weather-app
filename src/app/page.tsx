@@ -7,6 +7,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { PWAInstallPrompt } from '../components/PWAInstallPrompt';
 import { useServiceWorker } from '../hooks/useServiceWorker';
+import { fetchWeather } from '../services/weatherApi';
 
 // Lazy loading des composants lourds
 const WeatherDetails = lazy(() => import('../components/WeatherDetails').then(module => ({ default: module.WeatherDetails })));
@@ -35,7 +36,7 @@ export default function Home() {
           const { latitude, longitude } = position.coords;
           console.log('Géolocalisation réussie:', { latitude, longitude });
           setLocation({ lat: latitude, lon: longitude });
-          fetchWeather(latitude, longitude);
+          fetchWeatherData(latitude, longitude);
         },
         (error) => {
           console.error('Erreur géolocalisation:', error);
@@ -66,7 +67,7 @@ export default function Home() {
     }
   }, []);
 
-  const fetchWeather = async (lat?: number, lon?: number, city?: string) => {
+  const fetchWeatherData = async (lat?: number, lon?: number, city?: string) => {
     setLoading(true);
     setError(null);
     
@@ -79,26 +80,7 @@ export default function Home() {
         }
       }
       
-      let url = '/api/weather?';
-      if (lat !== undefined && lon !== undefined) {
-        url += `lat=${lat}&lon=${lon}`;
-      } else if (city) {
-        url += `city=${encodeURIComponent(city)}`;
-      } else {
-        setError('Paramètres manquants');
-        setLoading(false);
-        return;
-      }
-
-      console.log('Fetching weather from:', url);
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error('API Error:', data);
-        throw new Error(data.error || `Erreur API (${response.status})`);
-      }
-
+      const data = await fetchWeather(lat, lon, city);
       setWeatherData(data);
     } catch (err) {
       console.error('Erreur fetch weather:', err);
@@ -111,7 +93,7 @@ export default function Home() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      fetchWeather(undefined, undefined, searchQuery.trim());
+      fetchWeatherData(undefined, undefined, searchQuery.trim());
     }
   };
 
