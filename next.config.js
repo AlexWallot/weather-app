@@ -1,15 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: __dirname,
   experimental: {
     optimizePackageImports: ['@next/font'],
-    optimizeCss: true,
-    optimizeServerReact: true,
-    serverComponentsExternalPackages: [],
+    optimizeCss: false,
+    optimizeServerReact: true
   },
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
